@@ -168,30 +168,30 @@ function TOOL:BuildCPanel()
 	--Angles
 	self:AddControl("Header", { Description = "#tool.adv_bone.editangles" })
 
-	self.slider_ang_pitch = self:AddControl("Slider", { Label = "#tool.adv_bone.pitch", Type = "Float", Min = -180, Max = 180 })
+	self.slider_ang_pitch = self:AddControl("Slider", { Label = "#tool.adv_bone.pitch", Type = "Float", Min = -360, Max = 360 })
 	self.slider_ang_pitch:SetValue(0)
 	self.slider_ang_pitch.OnValueChanged = function() UpdateBone() end
 
-	self.slider_ang_yaw = self:AddControl("Slider", { Label = "#tool.adv_bone.yaw", Type = "Float", Min = -180, Max = 180 })
+	self.slider_ang_yaw = self:AddControl("Slider", { Label = "#tool.adv_bone.yaw", Type = "Float", Min = -360, Max = 360 })
 	self.slider_ang_yaw:SetValue(0)
 	self.slider_ang_yaw.OnValueChanged = function() UpdateBone() end
 
-	self.slider_ang_roll = self:AddControl("Slider", { Label = "#tool.adv_bone.roll", Type = "Float", Min = -180, Max = 180 })
+	self.slider_ang_roll = self:AddControl("Slider", { Label = "#tool.adv_bone.roll", Type = "Float", Min = -360, Max = 360 })
 	self.slider_ang_roll:SetValue(0)
 	self.slider_ang_roll.OnValueChanged = function() UpdateBone() end
 
 	--Position
 	self:AddControl("Header", { Description = "#tool.adv_bone.editposition" })
 
-	self.slider_pos_x = self:AddControl("Slider", { Label = "#tool.adv_bone.x", Type = "Float", Min = -128, Max = 128 })
+	self.slider_pos_x = self:AddControl("Slider", { Label = "#tool.adv_bone.x", Type = "Float", Min = -512, Max = 512 })
 	self.slider_pos_x:SetValue(0)
 	self.slider_pos_x.OnValueChanged = function() UpdateBone() end
 
-	self.slider_pos_y = self:AddControl("Slider", { Label = "#tool.adv_bone.y", Type = "Float", Min = -128, Max = 128 })
+	self.slider_pos_y = self:AddControl("Slider", { Label = "#tool.adv_bone.y", Type = "Float", Min = -512, Max = 512 })
 	self.slider_pos_y:SetValue(0)
 	self.slider_pos_y.OnValueChanged = function() UpdateBone() end
 
-	self.slider_pos_z = self:AddControl("Slider", { Label = "#tool.adv_bone.z", Type = "Float", Min = -128, Max = 128 })
+	self.slider_pos_z = self:AddControl("Slider", { Label = "#tool.adv_bone.z", Type = "Float", Min = -512, Max = 512 })
 	self.slider_pos_z:SetValue(0)
 	self.slider_pos_z.OnValueChanged = function() UpdateBone() end
 
