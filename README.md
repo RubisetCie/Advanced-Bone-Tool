@@ -1,3 +1,3 @@
-# Advanced-Bone-Tool
-GMod Addon, Manipulate bones in an advanced way.
-Now with more range and precision.
+# Advanced Bone Tool
+Garry's Mod Addon, manipulate bones in an advanced way.
+Now with infinite range and precision.
