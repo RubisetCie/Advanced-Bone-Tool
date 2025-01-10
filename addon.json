@@ -1,11 +1,11 @@
 {
-  "title":"Advanced Bone Tool",
-  "type":"tool",
-  "tags":[ "Fun" ],
-  "ignore":
-  [
-    ".git",
-    ".github",
-    "*.md"
-  ]
+	"title": "Advanced Bone Tool",
+	"type": "tool",
+	"tags": [ "fun", "movie" ],
+	"ignore":
+	[
+		".git",
+		".github",
+		"*.md"
+	]
 }
