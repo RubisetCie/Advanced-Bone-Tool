@@ -1,9 +1,9 @@
-TOOL.Name = "Advanced Bone Tool"
+TOOL.Name = "#tool.eyetracker.name"
 TOOL.Category = "Poser"
 
 if CLIENT then
-	language.Add("tool.adv_bone.name", TOOL.Name)
-	language.Add("tool.adv_bone.desc", "Original by Th13teen (modified by Rubisetcie)")
+	language.Add("tool.adv_bone.name", "Advanced Bone Tool")
+	language.Add("tool.adv_bone.desc", "Manipulate object's bones")
 	language.Add("tool.adv_bone.0", "Click to select object, context menu to edit bones.")
 
 	language.Add("tool.adv_bone.bone", "Bone")
@@ -18,6 +18,7 @@ if CLIENT then
 	language.Add("tool.adv_bone.x", "X")
 	language.Add("tool.adv_bone.y", "Y")
 	language.Add("tool.adv_bone.z", "Z")
+	language.Add("tool.adv_bone.multi", "Multiplier")
 
 	language.Add("tool.adv_bone.help", "Thank you for downloading this tool! <3 Th13teen")
 
@@ -139,10 +140,12 @@ end
 function TOOL:BuildCPanel()
 	local function UpdateBone()
 		local panel = controlpanel.Get("adv_bone")
+		local posmult = panel.slider_pos_multi:GetValue()
+		local angmult = panel.slider_ang_multi:GetValue()
 		local data = { ent = panel.ent,
 					bone = panel.combo_bonelist:GetValue(),
-					ang = Angle(panel.slider_ang_pitch:GetValue(), panel.slider_ang_yaw:GetValue(), panel.slider_ang_roll:GetValue()),
-					pos = Vector(panel.slider_pos_x:GetValue(), panel.slider_pos_y:GetValue(), panel.slider_pos_z:GetValue()),
+					ang = Angle(panel.slider_ang_pitch:GetValue() * angmult, panel.slider_ang_yaw:GetValue() * angmult, panel.slider_ang_roll:GetValue() * angmult),
+					pos = Vector(panel.slider_pos_x:GetValue() * posmult, panel.slider_pos_y:GetValue() * posmult, panel.slider_pos_z:GetValue() * posmult),
 					scale = Vector(panel.slider_scale_x:GetValue(), panel.slider_scale_y:GetValue(), panel.slider_scale_z:GetValue()) }
 
 		net.Start("UpdateAdvBoneSettings")
@@ -150,8 +153,13 @@ function TOOL:BuildCPanel()
 		net.SendToServer()
 	end
 
-	self.combo_bonelist = self:AddControl("ComboBox", { Label = "#tool.adv_bone.bone" })
+	self.combo_bonelist = vgui.Create( "CtrlListBox", self )
+	local combo_bonelistlabel = vgui.Create( "DLabel", self )
+	combo_bonelistlabel:SetText( "#tool.adv_bone.bone" )
+	combo_bonelistlabel:SetDark( true )
 	self.combo_bonelist:SetValue("")
+	self.combo_bonelist:SetHeight( 25 )
+	self.combo_bonelist:Dock( TOP )
 	self.combo_bonelist.ChooseOption = function(pnl, val)
 		pnl:SetValue(val)
 		local bone = 0
@@ -164,53 +172,71 @@ function TOOL:BuildCPanel()
 		end
 		UpdateAdvBoneMenu(ent, bone)
 	end
+	self:AddItem( combo_bonelistlabel, self.combo_bonelist )
 
 	--Angles
-	self:AddControl("Header", { Description = "#tool.adv_bone.editangles" })
+	self:Help( "#tool.adv_bone.editangles" )
 
-	self.slider_ang_pitch = self:AddControl("Slider", { Label = "#tool.adv_bone.pitch", Type = "Float", Min = -360, Max = 360 })
+	self.slider_ang_pitch = self:NumSlider( "#tool.adv_bone.pitch", nil, -360, 360, 2 )
 	self.slider_ang_pitch:SetValue(0)
+	self.slider_ang_pitch:SetHeight(16)
 	self.slider_ang_pitch.OnValueChanged = function() UpdateBone() end
 
-	self.slider_ang_yaw = self:AddControl("Slider", { Label = "#tool.adv_bone.yaw", Type = "Float", Min = -360, Max = 360 })
+	self.slider_ang_yaw = self:NumSlider( "#tool.adv_bone.yaw", nil, -360, 360, 2 )
 	self.slider_ang_yaw:SetValue(0)
+	self.slider_ang_yaw:SetHeight(16)
 	self.slider_ang_yaw.OnValueChanged = function() UpdateBone() end
 
-	self.slider_ang_roll = self:AddControl("Slider", { Label = "#tool.adv_bone.roll", Type = "Float", Min = -360, Max = 360 })
+	self.slider_ang_roll = self:NumSlider( "#tool.adv_bone.roll", nil, -360, 360, 2 )
 	self.slider_ang_roll:SetValue(0)
+	self.slider_ang_roll:SetHeight(16)
 	self.slider_ang_roll.OnValueChanged = function() UpdateBone() end
 
-	--Position
-	self:AddControl("Header", { Description = "#tool.adv_bone.editposition" })
+	self.slider_ang_multi = self:NumSlider( "#tool.adv_bone.multi", nil, -256, 256, 2 )
+	self.slider_ang_multi:SetValue(1)
+	self.slider_ang_multi.OnValueChanged = function() UpdateBone() end
 
-	self.slider_pos_x = self:AddControl("Slider", { Label = "#tool.adv_bone.x", Type = "Float", Min = -512, Max = 512 })
+	--Position
+	self:Help( "#tool.adv_bone.editposition" )
+
+	self.slider_pos_x = self:NumSlider( "#tool.adv_bone.x", nil, -512, 512, 2 )
 	self.slider_pos_x:SetValue(0)
+	self.slider_pos_x:SetHeight(16)
 	self.slider_pos_x.OnValueChanged = function() UpdateBone() end
 
-	self.slider_pos_y = self:AddControl("Slider", { Label = "#tool.adv_bone.y", Type = "Float", Min = -512, Max = 512 })
+	self.slider_pos_y = self:NumSlider( "#tool.adv_bone.y", nil, -512, 512, 2 )
 	self.slider_pos_y:SetValue(0)
+	self.slider_pos_y:SetHeight(16)
 	self.slider_pos_y.OnValueChanged = function() UpdateBone() end
 
-	self.slider_pos_z = self:AddControl("Slider", { Label = "#tool.adv_bone.z", Type = "Float", Min = -512, Max = 512 })
+	self.slider_pos_z = self:NumSlider( "#tool.adv_bone.z", nil, -512, 512, 2 )
 	self.slider_pos_z:SetValue(0)
+	self.slider_pos_z:SetHeight(16)
 	self.slider_pos_z.OnValueChanged = function() UpdateBone() end
 
-	--Scale
-	self:AddControl("Header", { Description = "#tool.adv_bone.editscale" })
+	self.slider_pos_multi = self:NumSlider( "#tool.adv_bone.multi", nil, -128, 128, 2 )
+	self.slider_pos_multi:SetValue(1)
+	self.slider_pos_multi.OnValueChanged = function() UpdateBone() end
 
-	self.slider_scale_x = self:AddControl("Slider", { Label = "#tool.adv_bone.x", Type = "Float", Min = -20, Max = 20 })
+	--Scale
+	self:Help( "#tool.adv_bone.editscale" )
+
+	self.slider_scale_x = self:NumSlider( "#tool.adv_bone.x", nil, -20, 20, 2 )
 	self.slider_scale_x:SetValue(0)
+	self.slider_scale_x:SetHeight(16)
 	self.slider_scale_x.OnValueChanged = function() UpdateBone() end
 
-	self.slider_scale_y = self:AddControl("Slider", { Label = "#tool.adv_bone.y", Type = "Float", Min = -20, Max = 20 })
+	self.slider_scale_y = self:NumSlider( "#tool.adv_bone.y", nil, -20, 20, 2 )
 	self.slider_scale_y:SetValue(0)
+	self.slider_scale_y:SetHeight(16)
 	self.slider_scale_y.OnValueChanged = function() UpdateBone() end
 
-	self.slider_scale_z = self:AddControl("Slider", { Label = "#tool.adv_bone.z", Type = "Float", Min = -20, Max = 20 })
+	self.slider_scale_z = self:NumSlider( "#tool.adv_bone.z", nil, -20, 20, 2 )
 	self.slider_scale_z:SetValue(0)
+	self.slider_scale_z:SetHeight(16)
 	self.slider_scale_z.OnValueChanged = function() UpdateBone() end
 
-	self.button_reset = self:AddControl("Button", {})
+	self.button_reset = vgui.Create( "DButton", self )
 	self.button_reset:SetText("Reset")
 	self.button_reset.DoClick = function()
 		local panel = controlpanel.Get("adv_bone")
@@ -218,13 +244,16 @@ function TOOL:BuildCPanel()
 		panel.slider_ang_pitch:SetValue(0)
 		panel.slider_ang_yaw:SetValue(0)
 		panel.slider_ang_roll:SetValue(0)
+		panel.slider_ang_multi:SetValue(1)
 
 		panel.slider_pos_x:SetValue(0)
 		panel.slider_pos_y:SetValue(0)
 		panel.slider_pos_z:SetValue(0)
+		panel.slider_pos_multi:SetValue(1)
 
 		panel.slider_scale_x:SetValue(1)
 		panel.slider_scale_y:SetValue(1)
 		panel.slider_scale_z:SetValue(1)
 	end
+	self:AddPanel( self.button_reset )
 end
