@@ -1,4 +1,4 @@
-TOOL.Name = "#tool.eyetracker.name"
+TOOL.Name = "#tool.adv_bone.name"
 TOOL.Category = "Poser"
 
 if CLIENT then
