@@ -1,6 +1,11 @@
 TOOL.Name = "#tool.adv_bone.name"
 TOOL.Category = "Poser"
 
+local IsValid = IsValid
+local controlpanel = controlpanel
+local vgui = vgui
+local net = net
+
 if CLIENT then
 	language.Add("tool.adv_bone.name", "Advanced Bone Tool")
 	language.Add("tool.adv_bone.desc", "Manipulate object's bones")
