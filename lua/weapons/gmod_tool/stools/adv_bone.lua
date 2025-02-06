@@ -37,8 +37,8 @@ if CLIENT then
 				return
 			end
 
-			local ang = ent:GetManipulateBoneAngles(bone) or Angle(0, 0, 0)
-			local pos = ent:GetManipulateBonePosition(bone) or Vector(0, 0, 0)
+			local ang = ent:GetManipulateBoneAngles(bone) or angle_zero
+			local pos = ent:GetManipulateBonePosition(bone) or vector_origin
 			local scale = ent:GetManipulateBoneScale(bone) or Vector(1, 1, 1)
 
 			panel.ent = ent
